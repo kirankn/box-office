@@ -1,7 +1,7 @@
 /*
  Version : 0.0.4.5
  Created On : 15.10.2015
- Last Edited : 15.10.2015
+ Last Edited : 17.10.2015
  */
 (function() {
     /* //////////////////////////////// Commonly required function ////////////////////////// */
