@@ -1,7 +1,7 @@
 /*
  Version : 0.0.4.5
  Created On : 15.10.2015
- Last Edited : 17.10.2015
+ Last Edited : 15.10.2015
  */
 (function() {
     /* //////////////////////////////// Commonly required function ////////////////////////// */
@@ -61,9 +61,9 @@
         webOrMobile = true, // True for web, False for mobile
         debugRequired = true,
         ecommImage = {
-            'amazon': 'http://sanjivb.com/wp-content/uploads/2013/07/Amazon-logo-small.jpg',
-            'flipkart': 'http://cdn.techgyd.com/fp.png',
-            'paytm': 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQm4mQRZ5_bKhoyKcUpsaprQBVBtJ5KP8T6pWCYyBsL39ZIbykP'
+            amazon: 'http://sanjivb.com/wp-content/uploads/2013/07/Amazon-logo-small.jpg',
+            flipkart: 'http://cdn.techgyd.com/fp.png',
+            paytm: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQm4mQRZ5_bKhoyKcUpsaprQBVBtJ5KP8T6pWCYyBsL39ZIbykP'
         };
 
     /* //////////////////////////////// main list of functions ////////////////////////// */
@@ -101,25 +101,28 @@
     };
 
     var findSuitableImages = function(callback){
-        var tempObject = [], allImages = ($imageHolder.length != 0) ? findImagesTheSpecifiedHolder() : [], parser = d.createElement('a');
+        var tempObject = [],
+            allImages = ($imageHolder.length != 0) ? findImagesTheSpecifiedHolder() : [],
+            parser = d.createElement('a'),
+            $referrer = window.location.href,
+            $pathname;
+
+        // Formatting the referrer
+        parser.href = $referrer;
+        $pathname = (parser.pathname.charAt(0)=='/') ? parser.pathname : '/'+ parser.pathname;
+        $referrer = $.trim(parser.protocol+ '//' +parser.hostname+$pathname).replace(/\/$/,'').replace(/\/$/,'');
+
         if(allImages.length > 0) {
             for(var i=0; i < allImages.length; i++){
                 var $this = $(allImages[i]),
                     $width = $this.width(),
                     $height = $this.height(),
-                    $src = $this.attr('src') || $this.attr('data-src'),
-                    $referrer = window.location.href,
-                    $pathname;
+                    $src = $this.attr('src') || $this.attr('data-src');
 
                 // formatting the image source
                 parser.href = $src;
                 $pathname = (parser.pathname.charAt(0)=='/') ? parser.pathname : '/'+ parser.pathname;
                 $src = $.trim(parser.protocol+ '//' +parser.hostname+$pathname).replace(/\/$/,'').replace(/\/$/,'');
-
-                // Formatting the referrer
-                parser.href = $referrer;
-                $pathname = (parser.pathname.charAt(0)=='/') ? parser.pathname : '/'+ parser.pathname;
-                $referrer = $.trim(parser.protocol+ '//' +parser.hostname+$pathname).replace(/\/$/,'').replace(/\/$/,'');
 
                 if (($width >= minWidthSupport && $width <= maxWidthSupport && $height >= minHeightRequired) || ($isMobile && $height >= minHeightRequired && ($width > Math.ceil(w.innerWidth * minWidthPercentage)))) {
                     // Mentioning which image format will be passed
@@ -188,7 +191,7 @@
     };
 
     var putGTM = function(callback){
-        //$('head').append($(GTM_TAG));
+        $('head').append($(GTM_TAG));
         setTimeout(function(){
             callback(true);
         }, 1000);
@@ -264,7 +267,9 @@
 
     var putHtmlAndBindEvents = function(dataObjects){
         console.log(dataObjects);
-        var heading = (dataObjects.receivedData.meta.message !== null) ? dataObjects.receivedData.meta.message : 'Recommended Products for you from', imageLink = (ecommImage[dataObjects.receivedData.meta.ecommerce]) ? ecommImage[dataObjects.receivedData.meta.ecommerce] : 'http://sanjivb.com/wp-content/uploads/2013/07/Amazon-logo-small.jpg', $html = '<div class="headingAndLogoContainer"><h5 class="title">'+ heading +' </h5><img src="'+ imageLink +'" class="logo"/></div>',
+        var heading = (dataObjects.receivedData.meta.message !== null && dataObjects.receivedData.meta.message != '') ? dataObjects.receivedData.meta.message : 'Recommended Products for you from',
+            imageLink = (ecommImage[dataObjects.receivedData.meta.ecommerce]) ? ecommImage[dataObjects.receivedData.meta.ecommerce] : 'http://sanjivb.com/wp-content/uploads/2013/07/Amazon-logo-small.jpg',
+            $html = '<div class="headingAndLogoContainer"><h5 class="title">'+ heading +' </h5><img src="'+ imageLink +'" class="logo"/></div>',
             i,
             $htmlContainer = $('<div class="_processedImageAd" data-attr="not-done" data-atf="'+ dataObjects.atf +'" data-iu="'+ $.trim(dataObjects.src) +'" data-s="'+ dataObjects.section +'" data-r="'+ dataObjects.referrer +'"></div>'),
             price,
@@ -273,7 +278,7 @@
 
         if(!$isMobile){
             for(i=0; i<dataObjects.receivedData.data.length; i++) {
-                price = ($.trim(dataObjects.receivedData.data[i]['discountPrice']) != "") ? dataObjects.receivedData.data[i]['discountPrice'] : dataObjects.receivedData.data[i]['price'];
+                price = ($.trim(dataObjects.receivedData.data[i].discountPrice) != "") ? dataObjects.receivedData.data[i].discountPrice : dataObjects.receivedData.data[i].price;
                 param = {
                     s: dataObjects.section,
                     g: (dataObjects.receivedData.data[i].gender == 'man') ? 1 : 0,
@@ -282,7 +287,7 @@
                     al: dataObjects.receivedData.data[i].link + affiliateId
                 };
                 if(!addBuyNowButton){
-                    $html += '<li data-price="'+ dataObjects.receivedData.data[i].price +'" data-discount-price="'+ dataObjects.receivedData.data[i].discountPrice +'" data-al="'+ dataObjects.receivedData.data[i].link +'" data-gender="'+ param.g +'" data-dress-type="'+ param.c +'"><a href="'+ clickLink +'?'+ $.param(param) +'" target="_blank"><img src="'+ dataObjects.receivedData.data[i].imagepath +'"><div class="smallInfo"><span>'+ dataObjects.receivedData.data[i].brand +'</span><span class="prdctName">'+ dataObjects.receivedData.data[i].name +'</span><span>Price: '+ price +'</span></div></a></li>';
+                    $html += '<li data-price="'+ dataObjects.receivedData.data[i].price +'" data-discount-price="'+ dataObjects.receivedData.data[i].discountPrice +'" data-al="'+ dataObjects.receivedData.data[i].link +'" data-gender="'+ param.g +'" data-dress-type="'+ param.c +'"><a href="'+ dataObjects.receivedData.data[i].link +'" target="_blank"><img src="'+ dataObjects.receivedData.data[i].imagepath +'"><div class="smallInfo"><span>'+ dataObjects.receivedData.data[i].brand +'</span><span class="prdctName">'+ dataObjects.receivedData.data[i].name +'</span><span>Price: '+ price +'</span></div></a></li>';
                 }
                 else {
                     $html += '<li data-price="' + dataObjects.receivedData.data[i].price + '" data-discount-price="' + dataObjects.receivedData.data[i].discountPrice + '" data-al="'+ dataObjects.receivedData.data[i].link +'" data-gender="'+ dataObjects.receivedData.data[i].gender +'" data-dress-type="'+ param.c +'"><img src="' + dataObjects.receivedData.data[i].imagepath + '"><div class="smallInfo"><span>' + dataObjects.receivedData.data[i].brand + '</span><span class="prdctName">' + dataObjects.receivedData.data[i].name + '</span><span>Price: ' + price + '</span><span><a href="'+ dataObjects.receivedData.data[i].link +'" class="_buy_now" target="_blank">Buy Now</a></span></div></li>';
@@ -330,9 +335,9 @@
                 Debugger.log(receivedData);
                 if(receivedData.result != 'np' && receivedData.result != 'error' && receivedData.length != 0){
                     if(!putGTMStatus){
-                        putGTM(function(){
-                            PM_IP_DL = window.PM_IP_DL || [];
-                        });
+                        //putGTM(function(){
+                        //    PM_IP_DL = window.PM_IP_DL || [];
+                        //});
                         putGTMStatus = true;
                     }
                     currentObject.receivedData = receivedData;
