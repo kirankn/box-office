@@ -1,11 +1,37 @@
 <html>
 <head>
-   <script type="text/javascript" src="pm_ip_general_web.js"></script>
+   <script type='text/javascript'>
+     var googletag = googletag || {};
+     googletag.cmd = googletag.cmd || [];
+     (function() {
+       var gads = document.createElement('script');
+       gads.async = true;
+       gads.type = 'text/javascript';
+       var useSSL = 'https:' == document.location.protocol;
+       gads.src = (useSSL ? 'https:' : 'http:') +
+         '//www.googletagservices.com/tag/js/gpt.js';
+       var node = document.getElementsByTagName('script')[0];
+       node.parentNode.insertBefore(gads, node);
+     })();
+   </script>
+
+   <script type='text/javascript'>
+     googletag.cmd.push(function() {
+       googletag.defineSlot('/175265624/T2_Ad_Unit', [300, 250], 'div-gpt-ad-1450796348510-0').addService(googletag.pubads());
+       googletag.pubads().enableSingleRequest();
+       googletag.enableServices();
+     });
+   </script>
+
 </head>
 <body>
 
-<div style="width: 630px" class="wp-caption aligncenter"><img title="George Clooney" alt="George Clooney" src="http://c268492.r92.cf1.rackcdn.com/img/notting-hill-big-scene.jpg" width="600" /><p class="wp-caption-text">George Clooney</p></div>
-
+<!-- /175265624/T2_Ad_Unit -->
+<div id='div-gpt-ad-1450796348510-0' style='height:250px; width:300px;'>
+   <script type='text/javascript'>
+      googletag.cmd.push(function() { googletag.display('div-gpt-ad-1450796348510-0'); });
+   </script>
+</div>
 
 </body>
 </html>
