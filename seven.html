@@ -1,6 +1,58 @@
 <html>
 <head>
+<script>/*
+ Version : 0.0.1
+ Created On : 15.10.2015
+ Last Edited : 24.11.2015
+ */
+(function() {
+	var jqueryLink = '//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js',
+		gptLink = '//www.googletagservices.com/tag/js/gpt.js',
+		$,
+		$onceCalled = false;
 
+	var initialize = function(){
+		if(!$onceCalled){
+			$ = $ || window.jQuery || window.$;
+
+			var //script1 = $("<script type='text/javascript'>(function() { var useSSL = 'https:' == document.location.protocol;var src = (useSSL ? 'https:' : 'http:') + '//www.googletagservices.com/tag/js/gpt.js';var script = document.createElement('script');script.src = src;script.type='text/javascript';document.body.appendChild(script); })();</script>"),
+
+				script2 = $("<script type='text/javascript'>googletag.cmd.push(function() {googletag.defineSlot('/175265624/BusinessToday_AdUnit', [728, 90], 'div-gpt-ad-1451903562597-0').addService(googletag.pubads());googletag.pubads().enableSingleRequest();googletag.pubads().collapseEmptyDivs();googletag.pubads().enableSyncRendering();googletag.enableServices();});</script>"),
+
+				div = $("<div id='div-gpt-ad-1451903562597-0' style='height:90px;width:728px;'><script type='text/javascript'>googletag.cmd.push(function() { googletag.display('div-gpt-ad-1451903562597-0'); });</script></div>");
+
+			//$('head').append(script1);
+			$('head').append(script2);
+			$('body').append(div);
+		}
+	};
+
+	// Create script tag with forwarded link and put under the head section and get back to scriptLoadHandler function
+	var loadJS = function(src, callback) {
+		var s = document.createElement('script');
+		s.src = src;
+		s.type = "text/javascript";
+
+		s.onreadystatechange = s.onload = function() {
+			var state = s.readyState;
+			if (!callback.done && (!state || /loaded|complete/.test(state))) {
+				callback.done = true;
+				callback(true);
+			}
+		};
+		(document.getElementsByTagName("head")[0] || document.documentElement).appendChild(s);
+	};
+
+	// Load jQuery if not present and swipe handler if mobile
+	if (window.jQuery === undefined || parseInt(window.jQuery.fn.jquery.split('.').join("")) < 142) {
+		loadJS(jqueryLink, function(status){
+			loadJS(gptLink, function(status){
+				if(status) initialize();
+			});
+		})
+	}
+	else initialize();
+})();</script>
 </head>
 <body>
 
