@@ -9,13 +9,6 @@
 (function (window, undefined) {
     "use strict";
     
-    var oldDocumentWrite = document.write
-
-    // change document.write temporary
-    document.write = function(node){
-        $("body").append(node);
-    };
-
     /**
      * Make plugin UMD compatible
      * Uses CommonJS, AMD or browser globals to create plugin.
@@ -253,7 +246,7 @@
 
                 if (dfpOptions.enableSingleRequest) {
                     pubadsService.enableSingleRequest();
-                    pubadsService.enableSyncRendering();
+                    //pubadsService.enableSyncRendering();
                 }
 
                 $.each(dfpOptions.setTargeting, function (k, v) {
@@ -526,7 +519,7 @@
             window.googletag.cmd = window.googletag.cmd || [];
 
             var gads = document.createElement('script');
-            gads.async = true;
+            gads.async = false;
             gads.type = 'text/javascript';
 
             // Adblock blocks the load of Ad scripts... so we check for that
