@@ -5,6 +5,13 @@
  * Copyright 2015 Matt Cooper
  * Released under the MIT license
  */
+ 
+var oldDocumentWrite = document.write
+
+// change document.write temporary
+document.write = function(node){
+    $("body").append(node)
+}
 
 (function (window, undefined) {
     "use strict";
