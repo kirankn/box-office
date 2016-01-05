@@ -246,6 +246,7 @@
 
                 if (dfpOptions.enableSingleRequest) {
                     pubadsService.enableSingleRequest();
+                    pubadsService.enableAsyncRendering();
                 }
 
                 $.each(dfpOptions.setTargeting, function (k, v) {
